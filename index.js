@@ -172,6 +172,25 @@ app.patch("/users/:id", (req, res) => {
   }
 });
 
+app.delete("/users/:id", (req, res) => {
+  const {id} = req.params;
+  const user = users.find((u) => {
+    return u.id === Number(id);
+  })
+
+  if(!user){
+    return res.status(404).json({
+      success: false,
+      message: "User not found"
+    })
+  }
+  users.splice(users.indexOf(user), 1);
+  res.status(200).json({
+    success: true,
+    data: users
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
