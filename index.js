@@ -1,4 +1,5 @@
 import express from "express";
+import { modifyReq } from "./middlewares.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ const users = [
 
 app.use(express.json());
 
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -26,7 +28,9 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/users", (req, res) => {
+// app.use(modifyReq);
+
+app.get("/users", modifyReq, (req, res) => {
   try {
     res.status(200).json({
       success: true,
