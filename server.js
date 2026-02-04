@@ -3,7 +3,7 @@ import fs from "fs";
 
 const PORT = 4000;
 
-const server = http.createServer((req, res) => {
+const server = http.createServer( (req, res) => {
 
     // fs.readFile("test.txt",(err,data)=>{
     //     if (err) throw err;
@@ -11,13 +11,26 @@ const server = http.createServer((req, res) => {
     //     res.end(text);
     // })
 
-    const data = fs.readFileSync("test.txt");
-    fs.writeFile("new.txt","this is new file.", (err)=>{
-        if (err) throw err;
-        console.log("File is created")
+    // const data = fs.readFileSync("test.txt");
+
+    const stream = fs.createReadStream("test.txt");
+    stream.on("data", (chunk)=>{
+        console.log("Chunk:",chunk.toString())
+    })
+    stream.on("end",()=>{
+        console.log("File read is finished")
     })
 
-    res.end(data.toString());
+    // fs.writeFile("new.txt","this is new file.", (err)=>{
+    //     if (err) throw err;
+    //     console.log("File is created")
+    // })
+
+    // const buf = Buffer.from("hello");
+    // Buffer.alloc(10)
+    // console.log(buf)
+
+    res.end("hello");
 });
 
 server.listen(PORT, () => {
