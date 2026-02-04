@@ -26,7 +26,6 @@ app.get("/", (req, res) => {
   });
 });
 
-
 app.get("/users", (req, res) => {
   try {
     res.status(200).json({
@@ -102,7 +101,7 @@ app.get("/user", (req, res) => {
 
 app.post("/users", (req, res) => {
   try {
-    console.log("mdih")
+    console.log("mdih");
     const { name, email } = req.body;
 
     if (!name.trim() || !email.trim()) {
@@ -112,10 +111,10 @@ app.post("/users", (req, res) => {
       });
     }
 
-    const isExists = users.find((u)=>{
-      return u.email === email.trim()
-    })
-    if(!!isExists){
+    const isExists = users.find((u) => {
+      return u.email === email.trim();
+    });
+    if (!!isExists) {
       return res.status(400).json({
         success: false,
         message: "User already exists",
@@ -136,7 +135,40 @@ app.post("/users", (req, res) => {
     res.status(500).json({
       success: false,
       error: `Something went wrong: ${error.message}`,
-    })
+    });
+  }
+});
+
+app.patch("/users/:id", (req, res) => {
+  try {
+    const data = req.body;
+    const { id } = req.params;
+    const user = users.find((u) => {
+      return u.id === Number(id);
+    });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const updatedUser = {
+      ...user,
+      ...data,
+      id: user.id,
+    };
+
+    users.splice(users.indexOf(user), 1, updatedUser);
+
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: `Something went wrong: ${error.message}`,
+    });
   }
 });
 
